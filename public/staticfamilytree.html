@@ -1,0 +1,247 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Family Tree</title>
+        <!-- Style -->
+        <style>
+        .tree {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .generation {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .person {
+            border: 2px solid #333;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px;
+            text-align: center;
+            background-color: #f0f0f0;
+            min-width: 150px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .person:hover {
+            transform: scale(1.1);
+        }
+
+        .person-photo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 10px;
+            object-fit: cover;
+        }
+
+        .connector {
+            width: 2px;
+            height: 40px;
+            background-color: #333;
+            margin: 0 auto;
+
+        }
+
+        .description-panel {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            z-index: 1000;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 20px;
+            color: #333;
+        }
+
+        .description-content {
+            margin-top: 20px;
+        }
+
+        .edit-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .edit-btn:hover {
+            background-color: #45a049;
+        }
+
+        .horizontal-line {
+            height: 2px;
+            background-color: #333;
+            width: 100%;
+            margin: 10px 0;
+        }
+        </style>
+    </head>
+    <body>
+        <div class="tree", id="familyTree">
+            <h1>Family Tree</h1>
+            <span class="horizontal-line"/>
+            <!-- Generation 1 -->
+            <div class="generation">
+                <div class="person" data-person-id="grandfather">
+                    <img src="https://cdn.vectorstock.com/i/preview-1x/73/69/anonymous-male-profile-picture-emotion-avatar-vector-15887369.jpg" alt="Grandfather" class="person-photo">
+                    <h3>Grandfather</h3>
+                    <p>D.P.A.</p>
+                    <p>1940-2010</p>
+                </div>
+                <div class="person" data-person-id="grandmother">
+                    <img src="https://cdn.vectorstock.com/i/preview-1x/73/69/anonymous-male-profile-picture-emotion-avatar-vector-15887369.jpg" alt="Grandmother" class="person-photo">
+                    <h3>Grandmother</h3>
+                    <p>C.A.</p>
+                    <p>1945-2005</p>
+                </div>
+            </div>
+
+            <div class="connector"></div>
+
+            <!-- Generation 2 -->
+            <div class="generation">
+                <div class="person" data-person-id="father">
+                    <img src="https://cdn.vectorstock.com/i/preview-1x/73/69/anonymous-male-profile-picture-emotion-avatar-vector-15887369.jpg" alt="Father" class="person-photo">
+                    <h3>Father</h3>
+                    <p>G.P.A.</p>
+                    <p>1967</p>
+                </div>
+                <div class="person" data-person-id="mother">
+                    <img src="https://cdn.vectorstock.com/i/preview-1x/73/69/anonymous-male-profile-picture-emotion-avatar-vector-15887369.jpg" alt="Mother" class="person-photo">
+                    <h3>Mother</h3>
+                    <p>L.A.</p>
+                    <p>1971</p>
+                </div>
+            </div>
+
+            <div class="connector"></div>
+
+            <!-- Generation 3 -->
+            <div class="generation">
+                <div class="person" data-person-id="child1">
+                    <img src="https://cdn.vectorstock.com/i/preview-1x/73/69/anonymous-male-profile-picture-emotion-avatar-vector-15887369.jpg" alt="Child 1" class="person-photo">
+                    <h3>Child 1</h3>
+                    <p>S.A.</p>
+                    <p>1992</p>
+                </div>
+                <div class="person" data-person-id="child2">
+                    <img src="https://cdn.vectorstock.com/i/preview-1x/73/69/anonymous-male-profile-picture-emotion-avatar-vector-15887369.jpg" alt="Child 2" class="person-photo">
+                    <h3>Child 2</h3>
+                    <p>S.A.</p>
+                    <p>1994</p>
+                </div>
+            </div>
+
+            <!-- Description Panel Template -->
+            <div class="description-panel" id="descriptionPanel">
+                <span class="close-btn" onclick="closeDescription()">&times;</span>
+                <div class="description-content">
+                    <img src="" alt="" class="person-photo" id="descriptionPhoto">
+                    <h2 id="descriptionName"></h2>
+                    <p id="descriptionText"></p>
+                    <!-- <button class="edit-btn" onclick="editDescription()">Edit</button> -->
+                </div>
+            </div>
+        </div>
+        </div>
+
+        <!-- Script -->
+        <script>
+          const familyDetails = {
+              grandfather: {
+                  name: "D. P. A.",
+                  photo: "https://cdn.vectorstock.com/i/preview-1x/73/69/anonymous-male-profile-picture-emotion-avatar-vector-15887369.jpg",
+                  description: "He was born in pokhara and was a brave man"
+              },
+              grandmother: {
+                  name: "C.A.",
+                  photo: "https://cdn.vectorstock.com/i/preview-1x/73/69/anonymous-male-profile-picture-emotion-avatar-vector-15887369.jpg",
+                  description: "She was great housewife"
+              },
+              father: {
+                  name: "G. P. A.",
+                  photo: "https://cdn.vectorstock.com/i/preview-1x/73/69/anonymous-male-profile-picture-emotion-avatar-vector-15887369.jpg",
+                  description: "He is a great father"
+              },
+              mother: {
+                  name: "L.A.",
+                  photo: "https://cdn.vectorstock.com/i/preview-1x/73/69/anonymous-male-profile-picture-emotion-avatar-vector-15887369.jpg",
+                  description: "She is sweet mother"
+              },
+              child1: {
+                  name: "S. A.",
+                  photo: "https://cdn.vectorstock.com/i/preview-1x/73/69/anonymous-male-profile-picture-emotion-avatar-vector-15887369.jpg",
+                  description: "She studied MBA"
+              },
+              child2: {
+                  name: "S.A.",
+                  photo: "https://cdn.vectorstock.com/i/preview-1x/73/69/anonymous-male-profile-picture-emotion-avatar-vector-15887369.jpg",
+                  description: "He is a Fullstack Developer"
+              }
+          };
+
+          // Add click listeners to all person elements
+          document.querySelectorAll('.person').forEach(person => {
+              person.addEventListener('click', function() {
+                  const personId = this.dataset.personId;
+                  showDescription(personId);
+              });
+          });
+
+          function showDescription(personId) {
+            const person = familyDetails[personId];
+            const panel = document.getElementById('descriptionPanel');
+            const overlay = document.getElementById('overlay');
+
+            document.getElementById('descriptionName').textContent = person.name;
+            document.getElementById('descriptionText').textContent = person.description;
+            document.getElementById('descriptionPhoto').src = person.photo;
+
+            panel.style.display = 'block';
+            overlay.style.display = 'block';
+          }
+
+          function closeDescription() {
+            document.getElementById('descriptionPanel').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+          }
+
+        </script>
+    </body>
+
+</html>
